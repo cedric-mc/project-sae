@@ -1,6 +1,12 @@
 <html>
     <body>
-        <h1>Hello World</h1>
-        <p>Testing 1 Test, Testing 1 Test</p>
+        <header>
+            <h1>Page de création de compte du joueur</h1>
+        </header>
+        <main>
+            <form action="" method="POST">
+                
+            </form>
+        </main>
     </body>
 </html>
