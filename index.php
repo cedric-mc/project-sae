@@ -14,7 +14,7 @@
                 <label for="pseudo">Pseudo</label>
                 <input type="text" name="pseudo" id="pseudo" required><br>
                 <label for="year">Année de naissance</label>
-                <input type="year" name="year" id="year" required><br>
+                <input type="number" name="year" id="year" required><br>
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required><br>
                 <label for="password">Mot de passe</label>
