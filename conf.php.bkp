@@ -1,0 +1,15 @@
+<?php
+    /*
+    * création d'objet PDO de la connexion qui sera représenté par la variable $cnx
+    */
+    $user = "";
+    $pass = "";
+    $server = "";
+    $dbname = "";
+    try {
+        $cnx = new PDO("mysql:host=$server;dbname=$dbname", $user, $pass);
+    }
+    catch (PDOException $e) {
+        echo "ERREUR : La connexion a échouée<br>";
+    }
+?>
