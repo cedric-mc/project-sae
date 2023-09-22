@@ -1,11 +1,11 @@
 <html>
     <body>
         <header>
-            <h1>Page de création de compte du joueur</h1>
+            <h1>Création d'un compte pour le joueur</h1>
         </header>
         <main>
             <form action="" method="POST">
-                
+
             </form>
         </main>
     </body>
