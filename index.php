@@ -7,6 +7,9 @@
     <body>
         <header>
             <h1>Création d'un compte pour le joueur ou connexion</h1>
+            <?php
+            include("conf.php");
+            ?>
         </header>
         <main>
             <h2>Création d'un compte</h2>
