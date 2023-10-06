@@ -10,6 +10,39 @@
         </header>
         <main>
             <h2>Création d'un compte</h2>
+            <?php
+            $yearError = "";
+            $emailError = "";
+            $passwordError = "";
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $year = $_POST["year"];
+                $email = $_POST["email"];
+                $password = $_POST["password"];
+
+                $currentYear = date("Y");
+                if ($year < 1900 || $year > $currentYear && strlen($year) != 4) {
+                    $yearError = "Année de naissance invalide.";
+                }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $emailError = "L'adresse e-mail n'est pas au format valide.";
+                }
+                if (strlen($password) < 12) {
+                    $passwordError = "Le mot de passe doit contenir au moins 12 caractères.";
+                }
+                if (!preg_match('/[0-9]/', $password)) {
+                    $passwordError = "Le mot de passe doit contenir au moins un chiffre.";
+                }
+                if (!preg_match('/[A-Z]/', $password)) {
+                    $passwordError = "Le mot de passe doit contenir au moins une majuscule.";
+                }
+                if (!preg_match('/[a-z]/', $password)) {
+                    $passwordError = "Le mot de passe doit contenir au moins une minuscule.";
+                }
+                if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
+                    $passwordError = "Le mot de passe doit contenir au moins un caractère spécial.";
+                }
+            }
+            ?>
             <form action="validation_mail.php" method="POST">
                 <label for="pseudo">Pseudo</label>
                 <input type="text" name="pseudo" id="pseudo" required><br>
