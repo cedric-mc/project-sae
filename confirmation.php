@@ -1,10 +1,14 @@
 <?php
 session_start();
-if(!isset($_SESSION["codeDeConfirmation"])) {
+if(!isset($_SESSION["codeDeConfirmation"]) || empty($_SESSION["codeDeConfirmation"]) || !isset($_SESSION["email"]) || empty($_SESSION["email"]) || !isset($_SESSION["password"]) || empty($_SESSION["password"]) || !isset($_SESSION["login"]) || empty($_SESSION["login"]) || !isset($_SESSION["year"]) || empty($_SESSION["year"])) {
     header("Location: index.php");
     exit;
 }
 $codeDeConfirmation = $_SESSION["codeDeConfirmation"];
+$email = $_SESSION["email"];
+$password = $_SESSION["password"];
+$login = $_SESSION["login"];
+$year = $_SESSION["year"];
 ?>
 <!DOCTYPE html>
 <html lang="fr">

@@ -1,19 +1,19 @@
 <?php
-if(!isset($_POST["pseudo"]) || !isset($_POST["year"]) || !isset($_POST["email"]) || !isset($_POST["password"])) {
+if(!isset($_POST["login"]) || !isset($_POST["year"]) || !isset($_POST["email"]) || !isset($_POST["password"])) {
     header("Location: index.php");
     exit();
 }
-$pseudoError = "";
+$loginError = "";
 $yearError = "";
 $emailError = "";
 $passwordError = "";
-$pseudo = $_POST["pseudo"];
+$login = $_POST["login"];
 $year = $_POST["year"];
 $email = $_POST["email"];
 $password = $_POST["password"];
 
-if (strlen($pseudo) < 3) {
-    $pseudoError = "Le pseudo doit contenir au moins 3 caractères.";
+if (strlen($login) < 3) {
+    $loginError = "Le login doit contenir au moins 3 caractères.";
 }
 $currentYear = date("Y");
 if (($year < 1900 || $year > $currentYear) && (strlen($year) != 4)) {
@@ -38,53 +38,64 @@ if (!preg_match('/[^a-zA-Z0-9]/', $password)) {
     $passwordError .= "Le mot de passe doit contenir au moins un caractère spécial.";
 }
 
-echo ("$pseudoError<br>");
+echo ("$loginError<br>");
 echo ("$yearError<br>");
 echo ("$emailError<br>");
 echo ("$passwordError<br>");
 
-if($pseudoError != "" || $yearError != "" || $emailError != "" || $passwordError != "") {
+if($loginError != "" || $yearError != "" || $emailError != "" || $passwordError != "") {
     echo "Inscription impossible.<br>";
     echo "<a href='index.php'>Retour au formulaire</a>";
 }
 
-$codeDeConfirmation = rand(10000, 99999);
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require ('PHPMailer/src/Exception.php');
-require ('PHPMailer/src/PHPMailer.php');
-require ('PHPMailer/src/SMTP.php');
-
-$mail = new PHPMailer(true);
-
+include("conf.php");
+$password = password_hash($password, PASSWORD_DEFAULT);
+$requete = "INSERT INTO USER (login, annee_naissance, email, password) VALUES ('$login', '$year', '$email', '$password')";
 try {
-    $mail->SMTPDebug = 0;
-    $mail->isSMTP();
-    $mail->Host = '';
-    $mail->SMTPAuth = 1;
-    $mail->Port = 465;
-    $mail->CharSet = 'UTF-8';
-    $mail->Username = '';
-    $mail->Password = '';
-    $mail->SMTPSecure = '';
+    $cnx->exec($requete);
+    $insert = true;
+} catch (PDOException $e) {
+    echo "Erreur : " . $e->getMessage();
+}
+if ($insert) {
+    session_start();
+    $codeDeConfirmation = rand(10000, 99999);
+    $_SESSION["codeDeConfirmation"] = $codeDeConfirmation;
 
-    $mail->setFrom('', "Mailer");
-    $mail->addAddress($email, $pseudo);
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
 
-    $mail->isHTML(true);
-    $mail->Subject = 'Inscription';
-    $mail->Body = "Bonjour $pseudo, <br> Votre inscription a bien été prise en compte. Cliquez sur le lien ci-dessous pour confirmer votre inscription :<br><br>";
-    $mail->Body .= '<a href="https://perso-etudiant.u-pem.fr/~mariyaconsta02/project-sae/confirmation.php?code=' . $codeDeConfirmation . '">Confirmer l\'inscription</a><br><br>';
-    $mail->Body .= "Cordialement, <br> L'équipe de l'Université Gustave Eiffel improvisée.";
-    $mail->AltBody = "Bonjour $pseudo, \n Votre inscription a bien été prise en compte. Copiez et collez le lien ci-dessous dans votre navigateur pour confirmer votre inscription : \n\n";
-    $mail->AltBody .= 'https://www.votresite.com/confirmation.php?code=' . $codeDeConfirmation . "\n\n";
-    $mail->AltBody .= "Cordialement, \n L'équipe de l'Université Gustave Eiffel improvisée.";
+    require('PHPMailer/src/Exception.php');
+    require('PHPMailer/src/PHPMailer.php');
+    require('PHPMailer/src/SMTP.php');
 
-    $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->SMTPDebug = 0;
+        $mail->isSMTP();
+        $mail->Host = '';
+        $mail->SMTPAuth = 1;
+        $mail->Port = 0;
+        $mail->CharSet = 'UTF-8';
+        $mail->Username = '';
+        $mail->Password = '';
+        $mail->SMTPSecure = '';
+
+        $mail->setFrom('', "Mailer");
+        $mail->addAddress($email, $login);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Inscription';
+        $mail->Body = "Bonjour $login, <br> Votre inscription a bien été prise en compte. Cliquez sur le lien ci-dessous pour confirmer votre inscription :<br><br>";
+        $mail->Body .= '<a href="">Confirmer l\'inscription</a><br><br>';
+        $mail->Body .= "Votre code de confirmation est : $codeDeConfirmation<br><br>";
+        $mail->Body .= "Cordialement, <br> .";
+
+        $mail->send();
+        header("Location: confirmation.php");
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
 }
 ?>
