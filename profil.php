@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['login']) || empty($_SESSION['login']) || !isset($_SESSION['password']) || empty($_SESSION['password']) || !isset($_SESSION['email']) || empty($_SESSION['email']) || !isset($_SESSION["year"]) || empty($_SESSION["year"])) {
+if (empty($_SESSION['login']) || empty($_SESSION['password']) || empty($_SESSION['email']) || empty($_SESSION["year"])) {
     header('Location: index.php');
     exit();
 }

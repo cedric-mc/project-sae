@@ -19,7 +19,7 @@ $year = $_SESSION["year"];
 
 <body>
 <h1>Confirmation</h1>
-<form action="" method="POST">
+<form method="POST">
     <label for="code">Code de confirmation</label>
     <input type="text" name="code" id="code" required>
     <input type="submit" value="Confirmer">
